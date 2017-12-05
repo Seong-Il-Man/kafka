@@ -4,15 +4,15 @@ Spring Boot Kafka
 
 Spring Boot Kafka Producer/Consumer Example  
 
-> **Function:**  
-> - MessageListener - Spring Kafka Message Listener  
-> - MessageSender - Spring Kafka Message Sender  
-> - CustomProducerListener - implements ProducerListener  
-
 
 kafka-releases-1.0.0
 -------------
 
+> **Functions:**  
+> - MessageListener - Spring Kafka Message Listener  
+> - MessageSender - Spring Kafka Message Sender  
+> - CustomProducerListener - implements ProducerListener  
+  
 > **Maven Dependencys:**
 > 
 > - spring-boot-starter-1.5.9.RELEASE  
