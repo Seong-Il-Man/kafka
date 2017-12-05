@@ -38,3 +38,10 @@ kafka-releases-1.0.0
 `<artifactId>spring-kafka</artifactId>`  
 `<version>1.3.2.RELEASE</version>`  
 `</dependency>`  
+  
+> - spring-boot-starter-log4j-1.3.8.RELEASE  
+`<dependency>`  
+`<groupId>org.springframework.boot</groupId>`  
+`<artifactId>spring-boot-starter-log4j</artifactId>`  
+`<version>1.3.8.RELEASE</version>`  
+`</dependency>`  
