@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
+import org.apache.kafka.clients.producer.ProducerConfig;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,7 +14,12 @@ import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.config.KafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
+import org.springframework.kafka.core.DefaultKafkaProducerFactory;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.core.ProducerFactory;
 import org.springframework.kafka.listener.ConcurrentMessageListenerContainer;
+
+import com.spring.kafka.handler.CustomProducerListener;
 
 /**
  * <p> KafkaConfig
@@ -20,6 +27,9 @@ import org.springframework.kafka.listener.ConcurrentMessageListenerContainer;
 @Configuration
 @EnableKafka
 public class KafkaConfig {
+	
+	@Autowired
+	private CustomProducerListener customProducerListener;
 	
 	@Value("${bootstrap.servers.config}")
 	private String bootstrapServersConfig;
@@ -41,6 +51,19 @@ public class KafkaConfig {
 	
 	@Value("${auto.offset.reset.config}")
 	private String autoOffsetResetConfig;
+	
+	@Value("${max.block.ms.config}")
+	private String maxBlockMsConfig;
+
+	@Value("${key.serializer.class.config}")
+	private String keySerializerClassConfig;
+
+	@Value("${value.serializer.class.config}")
+	private String valueSerializerClassConfig;
+	
+	/**
+	 * consumer Config
+	 */
 	
 	@Bean
     KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, String>> kafkaListenerContainerFactory() {
@@ -69,4 +92,32 @@ public class KafkaConfig {
         props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, autoOffsetResetConfig);
         return props;
     }
+	
+	
+	/**
+	 * Producer Config
+	 */
+	
+	@Bean
+	public ProducerFactory<String, String> producerFactory() {
+	    return new DefaultKafkaProducerFactory<>(producerConfigs());
+	}
+
+	@Bean
+	public Map<String, Object> producerConfigs() {
+	    Map<String, Object> props = new HashMap<>();
+	    props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServersConfig);
+	    props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, keySerializerClassConfig);
+        props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, valueSerializerClassConfig);
+        props.put(ProducerConfig.MAX_BLOCK_MS_CONFIG, maxBlockMsConfig);
+	    return props;
+	}
+
+	@Bean
+	public KafkaTemplate<String, String> kafkaTemplate() {
+		KafkaTemplate<String, String> template = new KafkaTemplate<String, String>(producerFactory());
+		// send success, error callback을 받을 리스너 등록
+		template.setProducerListener(customProducerListener);
+	    return template;
+	}
 }
