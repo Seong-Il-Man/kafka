@@ -18,7 +18,7 @@ kafka-releases-1.0.0
 >`<version>1.5.9.RELEASE</version>`  
 >`</dependency>`  
   
-> - spring-boot-1.5.9.RELEASE
+> - spring-boot-1.5.9.RELEASE  
 `<dependency>`  
 `<groupId>org.springframework.boot</groupId>`  
 `<artifactId>spring-boot</artifactId>`  
